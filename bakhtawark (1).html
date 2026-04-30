@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bakhtawark — Writer & Artist</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:ital,wght@0,300;1,300&family=Unbounded:wght@200;300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #faf7f2;
+    --paper: #2c2416;
+    --dust: #6b5a3e;
+    --ash: #f0ebe0;
+    --ember: #9a7340;
+    --smoke: #4a3f30;
+    --fog: #f0ebe0;
+    --gold: #9a7340;
+    --cream: #faf7f2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, opacity 0.2s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    border: 0.5px solid rgba(196,151,42,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.2s ease, height 0.2s ease;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.35;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.8rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: normal;
+    background: rgba(250, 247, 242, 0.9);
+    backdrop-filter: blur(14px);
+  }
+
+  nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 3rem; right: 3rem;
+    height: 0.5px;
+    background: rgba(107,90,62,0.15);
+  }
+
+  .nav-logo {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 200;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--dust);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    color: var(--smoke);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+    font-style: italic;
+  }
+
+  .nav-links a:hover { color: var(--dust); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 200;
+    font-size: 22vw;
+    color: transparent;
+    -webkit-text-stroke: 0.5px rgba(107,90,62,0.08);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 2px;
+    color: var(--ember);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(3.5rem, 9vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--dust);
+  }
+
+  .hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 4rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.8s forwards;
+  }
+
+  .hero-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    line-height: 1.8;
+    color: var(--smoke);
+    max-width: 360px;
+  }
+
+  .hero-scroll {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 2px;
+    color: var(--ember);
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-scroll::after {
+    content: '';
+    width: 0.5px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--ember), transparent);
+    animation: scrollLine 2s ease infinite;
+  }
+
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    border-top: 0.5px solid rgba(107,90,62,0.15);
+    border-bottom: 0.5px solid rgba(107,90,62,0.15);
+    padding: 1rem 0;
+    overflow: hidden;
+    background: #ede8dc;
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+
+  .marquee-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 2px;
+    color: var(--ember);
+    text-transform: uppercase;
+    padding: 0 3rem;
+  }
+
+  .marquee-dot {
+    color: rgba(107,90,62,0.35);
+    padding: 0 0.5rem;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ABOUT */
+  .about {
+    padding: 10rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: center;
+    border-bottom: 0.5px solid rgba(107,90,62,0.1);
+  }
+
+  .about-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 3px;
+    color: var(--ember);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .about-label::before {
+    content: '';
+    width: 30px;
+    height: 0.5px;
+    background: var(--ember);
+  }
+
+  .about-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--paper);
+    margin-bottom: 2rem;
+  }
+
+  .about-heading em {
+    font-style: italic;
+    color: var(--dust);
+  }
+
+  .about-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    line-height: 2;
+    color: var(--smoke);
+  }
+
+  .about-right {
+    position: relative;
+  }
+
+  .about-quote-block {
+    padding: 3rem;
+    border: 0.5px solid rgba(107,90,62,0.15);
+    background: #ede8dc;
+    position: relative;
+  }
+
+  .about-quote-block::before {
+    content: '\201C';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem;
+    line-height: 0.6;
+    color: rgba(154,115,64,0.15);
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    font-weight: 300;
+  }
+
+  .about-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--dust);
+    position: relative;
+    z-index: 1;
+  }
+
+  .about-quote-attr {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 2px;
+    color: var(--ember);
+    margin-top: 1.5rem;
+  }
+
+  /* WRITING */
+  .writing {
+    padding: 8rem 3rem;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.5px solid rgba(107,90,62,0.12);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1;
+    color: var(--paper);
+    letter-spacing: -0.02em;
+  }
+
+  .section-title em { font-style: italic; color: var(--dust); }
+
+  .section-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 2px;
+    color: var(--ember);
+    text-decoration: none;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s ease;
+  }
+
+  .section-link:hover { gap: 16px; }
+  .section-link::after { content: '→'; }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1px;
+    background: rgba(107,90,62,0.1);
+  }
+
+  .post-card {
+    background: var(--ink);
+    padding: 2.5rem;
+    transition: background 0.3s ease;
+    text-decoration: none;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .post-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 0;
+    background: #ede8dc;
+    transition: height 0.4s ease;
+  }
+
+  .post-card:hover::before { height: 100%; }
+
+  .post-card-inner { position: relative; z-index: 1; }
+
+  .post-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 2px;
+    color: var(--ember);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .post-tag::before {
+    content: '';
+    width: 20px;
+    height: 0.5px;
+    background: var(--ember);
+  }
+
+  .post-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1.25;
+    color: var(--paper);
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .post-card.featured .post-title {
+    font-size: 2.2rem;
+    line-height: 1.1;
+  }
+
+  .post-excerpt {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.8;
+    color: var(--smoke);
+    margin-bottom: 2rem;
+  }
+
+  .post-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 1.5px;
+    color: rgba(107,90,62,0.5);
+  }
+
+  /* POEMS STRIP */
+  .poems-strip {
+    padding: 8rem 3rem;
+    background: #ede8dc;
+    border-top: 0.5px solid rgba(107,90,62,0.1);
+    border-bottom: 0.5px solid rgba(107,90,62,0.1);
+  }
+
+  .poems-list { margin-top: 4rem; }
+
+  .poem-row {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 2rem;
+    align-items: center;
+    padding: 1.8rem 0;
+    border-bottom: 0.5px solid rgba(107,90,62,0.1);
+    text-decoration: none;
+    transition: padding-left 0.3s ease;
+  }
+
+  .poem-row:hover { padding-left: 1rem; }
+
+  .poem-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ember);
+    letter-spacing: 1px;
+  }
+
+  .poem-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 1.4rem;
+    color: var(--paper);
+    letter-spacing: -0.01em;
+  }
+
+  .poem-name em { font-style: italic; color: var(--dust); }
+
+  .poem-arrow {
+    font-size: 0.9rem;
+    color: var(--smoke);
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .poem-row:hover .poem-arrow {
+    color: var(--ember);
+    transform: translateX(6px);
+  }
+
+  /* CONTACT */
+  .contact {
+    padding: 10rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: start;
+  }
+
+  .contact-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+  }
+
+  .contact-heading em { font-style: italic; color: var(--dust); }
+
+  .contact-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    line-height: 1.9;
+    color: var(--smoke);
+    margin-top: 1.5rem;
+    max-width: 320px;
+  }
+
+  .contact-links {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .contact-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.4rem 1.8rem;
+    background: #ede8dc;
+    text-decoration: none;
+    transition: background 0.3s ease, padding-left 0.3s ease;
+    border-bottom: 0.5px solid rgba(107,90,62,0.08);
+  }
+
+  .contact-link:hover { background: #e4ddd0; padding-left: 2.4rem; }
+
+  .contact-link-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 2px;
+    color: var(--ember);
+    text-transform: uppercase;
+  }
+
+  .contact-link-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--dust);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 0.5px solid rgba(107,90,62,0.1);
+  }
+
+  .footer-logo {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 200;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(107,90,62,0.5);
+  }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 1px;
+    color: rgba(107,90,62,0.4);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--ember); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">BAKHTAWARK</a>
+  <ul class="nav-links">
+    <li><a href="#writing">Writing</a></li>
+    <li><a href="#poems">Poems</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">بختاور</div>
+  <p class="hero-eyebrow">Writer · Artist · بختاور</p>
+  <h1 class="hero-title">
+    Words that<br><em>bleed</em> before<br>they breathe.
+  </h1>
+  <div class="hero-bottom">
+    <p class="hero-desc">
+      A home for stories that live in the space between language and feeling — where Urdu breathes inside English and metaphors do what explanations cannot.
+    </p>
+    <div class="hero-scroll">scroll</div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">prose <span class="marquee-dot">·</span> poetry <span class="marquee-dot">·</span> literary fiction <span class="marquee-dot">·</span> art <span class="marquee-dot">·</span> bakhtawark <span class="marquee-dot">·</span> بختاور <span class="marquee-dot">·</span> writer <span class="marquee-dot">·</span> storyteller <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">prose <span class="marquee-dot">·</span> poetry <span class="marquee-dot">·</span> literary fiction <span class="marquee-dot">·</span> art <span class="marquee-dot">·</span> bakhtawark <span class="marquee-dot">·</span> بختاور <span class="marquee-dot">·</span> writer <span class="marquee-dot">·</span> storyteller <span class="marquee-dot">·</span></span>
+  </div>
+</div>
+
+<!-- WRITING -->
+<section class="writing" id="writing">
+  <div class="section-header reveal">
+    <h2 class="section-title">Latest <em>Writing</em></h2>
+    <a href="#" class="section-link">All pieces</a>
+  </div>
+
+  <div class="posts-grid">
+    <a href="#" class="post-card featured reveal">
+      <div class="post-card-inner">
+        <p class="post-tag">Short story</p>
+        <h3 class="post-title">She Who Ran to the Sea</h3>
+        <p class="post-excerpt">A river does not run toward the sea because she is foolish. She runs because that is what rivers were told they are supposed to do — and this is the story of what happens when she finally stops.</p>
+        <p class="post-meta">2025 · 18 min read</p>
+      </div>
+    </a>
+
+    <a href="#" class="post-card reveal" style="transition-delay:0.1s">
+      <div class="post-card-inner">
+        <p class="post-tag">Essay</p>
+        <h3 class="post-title">On First Love and Its Wreckage</h3>
+        <p class="post-excerpt">The thing about first love is it does not ask permission to rearrange you.</p>
+        <p class="post-meta">2025 · 9 min read</p>
+      </div>
+    </a>
+
+    <a href="#" class="post-card reveal" style="transition-delay:0.2s">
+      <div class="post-card-inner">
+        <p class="post-tag">Prose poetry</p>
+        <h3 class="post-title">Infinity, He Said Casually</h3>
+        <p class="post-excerpt">As if infinity were something you could say in a corridor and walk away from.</p>
+        <p class="post-meta">2025 · 5 min read</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-left reveal">
+    <p class="about-label">About</p>
+    <h2 class="about-heading">I write what I<br>cannot <em>say out loud.</em></h2>
+    <p class="about-body">
+      I am Bakhtawark — بختاور — a writer and artist living somewhere between Urdu and English, between what happened and what it meant. I write literary prose, poetry, and long-form stories about love, identity, grief, and the quiet violence of being misunderstood.<br><br>
+      My work lives at the intersection of metaphor and feeling — where rivers carry heartbreak and the moon forgets she has her own light.
+    </p>
+  </div>
+  <div class="about-right reveal" style="transition-delay:0.15s">
+    <div class="about-quote-block">
+      <p class="about-quote">
+        "Not every story ends with two people. Some stories end with one woman, finally whole, walking into the light she built herself."
+      </p>
+      <p class="about-quote-attr">— She Who Ran to the Sea</p>
+    </div>
+  </div>
+</section>
+
+<!-- POEMS STRIP -->
+<section class="poems-strip" id="poems">
+  <div class="section-header reveal">
+    <h2 class="section-title">Poems &amp; <em>Fragments</em></h2>
+    <a href="#" class="section-link">All poems</a>
+  </div>
+
+  <div class="poems-list">
+    <a href="#" class="poem-row reveal">
+      <span class="poem-num">001</span>
+      <span class="poem-name">The Gravity of <em>Borrowed Light</em></span>
+      <span class="poem-arrow">→</span>
+    </a>
+    <a href="#" class="poem-row reveal" style="transition-delay:0.05s">
+      <span class="poem-num">002</span>
+      <span class="poem-name">What the <em>River Kept</em></span>
+      <span class="poem-arrow">→</span>
+    </a>
+    <a href="#" class="poem-row reveal" style="transition-delay:0.1s">
+      <span class="poem-num">003</span>
+      <span class="poem-name"><em>Infinity</em> as a Casual Remark</span>
+      <span class="poem-arrow">→</span>
+    </a>
+    <a href="#" class="poem-row reveal" style="transition-delay:0.15s">
+      <span class="poem-num">004</span>
+      <span class="poem-name">He Said <em>Friend</em> Like a Verdict</span>
+      <span class="poem-arrow">→</span>
+    </a>
+    <a href="#" class="poem-row reveal" style="transition-delay:0.2s">
+      <span class="poem-num">005</span>
+      <span class="poem-name">The Door That <em>Was Never Locked</em></span>
+      <span class="poem-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="reveal">
+    <h2 class="contact-heading">Let's<br><em>connect.</em></h2>
+    <p class="contact-sub">
+      For collaborations, feedback, or just to say a piece found you at the right time — reach out. Words are always welcome here.
+    </p>
+  </div>
+
+  <div class="reveal" style="transition-delay:0.15s">
+    <div class="contact-links">
+      <a href="https://instagram.com/__bakhtawark" class="contact-link">
+        <span class="contact-link-label">Instagram</span>
+        <span class="contact-link-val">@__bakhtawark</span>
+      </a>
+      <a href="#" class="contact-link">
+        <span class="contact-link-label">Wattpad</span>
+        <span class="contact-link-val">bakhtawark</span>
+      </a>
+      <a href="#" class="contact-link">
+        <span class="contact-link-label">Email</span>
+        <span class="contact-link-val">say hello</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">BAKHTAWARK</span>
+  <span class="footer-copy">© 2025 · بختاور · All writing is mine.</span>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width = '50px';
+      ring.style.height = '50px';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width = '32px';
+      ring.style.height = '32px';
+    });
+  });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => obs.observe(r));
+</script>
+</body>
+</html>
