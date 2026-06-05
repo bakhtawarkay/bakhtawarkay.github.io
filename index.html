@@ -3,860 +3,819 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bakhtawark — Writer & Artist</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:ital,wght@0,300;1,300&family=Unbounded:wght@200;300&display=swap" rel="stylesheet">
+<title>Bakhtawar بختاور — Writer · Poet · Artist</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@200;300;400&family=Noto+Nastaliq+Urdu:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #faf7f2;
-    --paper: #2c2416;
-    --dust: #6b5a3e;
-    --ash: #f0ebe0;
-    --ember: #9a7340;
-    --smoke: #4a3f30;
-    --fog: #f0ebe0;
-    --gold: #9a7340;
-    --cream: #faf7f2;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--ink);
-    color: var(--paper);
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  /* Custom cursor */
-  .cursor {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    background: var(--gold);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s ease, opacity 0.2s ease;
-    mix-blend-mode: difference;
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 32px;
-    height: 32px;
-    border: 0.5px solid rgba(196,151,42,0.4);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: transform 0.18s ease, width 0.2s ease, height 0.2s ease;
-  }
-
-  /* Noise texture overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.35;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 1.8rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    mix-blend-mode: normal;
-    background: rgba(250, 247, 242, 0.9);
-    backdrop-filter: blur(14px);
-  }
-
-  nav::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 3rem; right: 3rem;
-    height: 0.5px;
-    background: rgba(107,90,62,0.15);
-  }
-
-  .nav-logo {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 200;
-    font-size: 13px;
-    letter-spacing: 3px;
-    color: var(--dust);
-    text-decoration: none;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 300;
-    letter-spacing: 1.5px;
-    color: var(--smoke);
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: color 0.3s ease;
-    font-style: italic;
-  }
-
-  .nav-links a:hover { color: var(--dust); }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 0 3rem 6rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-bg-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 200;
-    font-size: 22vw;
-    color: transparent;
-    -webkit-text-stroke: 0.5px rgba(107,90,62,0.08);
-    white-space: nowrap;
-    pointer-events: none;
-    user-select: none;
-    letter-spacing: -0.02em;
-  }
-
-  .hero-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 2px;
-    color: var(--ember);
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.3s forwards;
-  }
-
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(3.5rem, 9vw, 9rem);
-    line-height: 0.92;
-    letter-spacing: -0.02em;
-    color: var(--paper);
-    max-width: 900px;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.5s forwards;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--dust);
-  }
-
-  .hero-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 4rem;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.8s forwards;
-  }
-
-  .hero-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    font-style: italic;
-    line-height: 1.8;
-    color: var(--smoke);
-    max-width: 360px;
-  }
-
-  .hero-scroll {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 2px;
-    color: var(--ember);
-    text-transform: uppercase;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .hero-scroll::after {
-    content: '';
-    width: 0.5px;
-    height: 60px;
-    background: linear-gradient(to bottom, var(--ember), transparent);
-    animation: scrollLine 2s ease infinite;
-  }
-
-  @keyframes scrollLine {
-    0% { transform: scaleY(0); transform-origin: top; }
-    50% { transform: scaleY(1); transform-origin: top; }
-    51% { transform: scaleY(1); transform-origin: bottom; }
-    100% { transform: scaleY(0); transform-origin: bottom; }
-  }
-
-  /* MARQUEE */
-  .marquee-wrap {
-    border-top: 0.5px solid rgba(107,90,62,0.15);
-    border-bottom: 0.5px solid rgba(107,90,62,0.15);
-    padding: 1rem 0;
-    overflow: hidden;
-    background: #ede8dc;
-  }
-
-  .marquee-track {
-    display: flex;
-    gap: 0;
-    animation: marquee 20s linear infinite;
-    white-space: nowrap;
-  }
-
-  .marquee-item {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 2px;
-    color: var(--ember);
-    text-transform: uppercase;
-    padding: 0 3rem;
-  }
-
-  .marquee-dot {
-    color: rgba(107,90,62,0.35);
-    padding: 0 0.5rem;
-  }
-
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  /* ABOUT */
-  .about {
-    padding: 10rem 3rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8rem;
-    align-items: center;
-    border-bottom: 0.5px solid rgba(107,90,62,0.1);
-  }
-
-  .about-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 3px;
-    color: var(--ember);
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .about-label::before {
-    content: '';
-    width: 30px;
-    height: 0.5px;
-    background: var(--ember);
-  }
-
-  .about-heading {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(2.2rem, 4vw, 3.5rem);
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    color: var(--paper);
-    margin-bottom: 2rem;
-  }
-
-  .about-heading em {
-    font-style: italic;
-    color: var(--dust);
-  }
-
-  .about-body {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    font-style: italic;
-    line-height: 2;
-    color: var(--smoke);
-  }
-
-  .about-right {
-    position: relative;
-  }
-
-  .about-quote-block {
-    padding: 3rem;
-    border: 0.5px solid rgba(107,90,62,0.15);
-    background: #ede8dc;
-    position: relative;
-  }
-
-  .about-quote-block::before {
-    content: '\201C';
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 8rem;
-    line-height: 0.6;
-    color: rgba(154,115,64,0.15);
-    position: absolute;
-    top: 2rem;
-    left: 2rem;
-    font-weight: 300;
-  }
-
-  .about-quote {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.35rem;
-    font-style: italic;
-    font-weight: 300;
-    line-height: 1.7;
-    color: var(--dust);
-    position: relative;
-    z-index: 1;
-  }
-
-  .about-quote-attr {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 2px;
-    color: var(--ember);
-    margin-top: 1.5rem;
-  }
-
-  /* WRITING */
-  .writing {
-    padding: 8rem 3rem;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 0.5px solid rgba(107,90,62,0.12);
-  }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1;
-    color: var(--paper);
-    letter-spacing: -0.02em;
-  }
-
-  .section-title em { font-style: italic; color: var(--dust); }
-
-  .section-link {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 2px;
-    color: var(--ember);
-    text-decoration: none;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: gap 0.3s ease;
-  }
-
-  .section-link:hover { gap: 16px; }
-  .section-link::after { content: '→'; }
-
-  .posts-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 1px;
-    background: rgba(107,90,62,0.1);
-  }
-
-  .post-card {
-    background: var(--ink);
-    padding: 2.5rem;
-    transition: background 0.3s ease;
-    text-decoration: none;
-    display: block;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .post-card::before {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 0;
-    background: #ede8dc;
-    transition: height 0.4s ease;
-  }
-
-  .post-card:hover::before { height: 100%; }
-
-  .post-card-inner { position: relative; z-index: 1; }
-
-  .post-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 2px;
-    color: var(--ember);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .post-tag::before {
-    content: '';
-    width: 20px;
-    height: 0.5px;
-    background: var(--ember);
-  }
-
-  .post-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 1.5rem;
-    line-height: 1.25;
-    color: var(--paper);
-    margin-bottom: 1rem;
-    letter-spacing: -0.01em;
-  }
-
-  .post-card.featured .post-title {
-    font-size: 2.2rem;
-    line-height: 1.1;
-  }
-
-  .post-excerpt {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.95rem;
-    font-style: italic;
-    line-height: 1.8;
-    color: var(--smoke);
-    margin-bottom: 2rem;
-  }
-
-  .post-meta {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 1.5px;
-    color: rgba(107,90,62,0.5);
-  }
-
-  /* POEMS STRIP */
-  .poems-strip {
-    padding: 8rem 3rem;
-    background: #ede8dc;
-    border-top: 0.5px solid rgba(107,90,62,0.1);
-    border-bottom: 0.5px solid rgba(107,90,62,0.1);
-  }
-
-  .poems-list { margin-top: 4rem; }
-
-  .poem-row {
-    display: grid;
-    grid-template-columns: 80px 1fr auto;
-    gap: 2rem;
-    align-items: center;
-    padding: 1.8rem 0;
-    border-bottom: 0.5px solid rgba(107,90,62,0.1);
-    text-decoration: none;
-    transition: padding-left 0.3s ease;
-  }
-
-  .poem-row:hover { padding-left: 1rem; }
-
-  .poem-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--ember);
-    letter-spacing: 1px;
-  }
-
-  .poem-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 1.4rem;
-    color: var(--paper);
-    letter-spacing: -0.01em;
-  }
-
-  .poem-name em { font-style: italic; color: var(--dust); }
-
-  .poem-arrow {
-    font-size: 0.9rem;
-    color: var(--smoke);
-    transition: color 0.3s ease, transform 0.3s ease;
-  }
-
-  .poem-row:hover .poem-arrow {
-    color: var(--ember);
-    transform: translateX(6px);
-  }
-
-  /* CONTACT */
-  .contact {
-    padding: 10rem 3rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8rem;
-    align-items: start;
-  }
-
-  .contact-heading {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    color: var(--paper);
-  }
-
-  .contact-heading em { font-style: italic; color: var(--dust); }
-
-  .contact-sub {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    font-style: italic;
-    line-height: 1.9;
-    color: var(--smoke);
-    margin-top: 1.5rem;
-    max-width: 320px;
-  }
-
-  .contact-links {
-    margin-top: 4rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-  }
-
-  .contact-link {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.4rem 1.8rem;
-    background: #ede8dc;
-    text-decoration: none;
-    transition: background 0.3s ease, padding-left 0.3s ease;
-    border-bottom: 0.5px solid rgba(107,90,62,0.08);
-  }
-
-  .contact-link:hover { background: #e4ddd0; padding-left: 2.4rem; }
-
-  .contact-link-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 2px;
-    color: var(--ember);
-    text-transform: uppercase;
-  }
-
-  .contact-link-val {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    font-style: italic;
-    color: var(--dust);
-  }
-
-  /* FOOTER */
-  footer {
-    padding: 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 0.5px solid rgba(107,90,62,0.1);
-  }
-
-  .footer-logo {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 200;
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: rgba(107,90,62,0.5);
-  }
-
-  .footer-copy {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 300;
-    font-style: italic;
-    letter-spacing: 1px;
-    color: rgba(107,90,62,0.4);
-  }
-
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 3px; }
-  ::-webkit-scrollbar-track { background: var(--ink); }
-  ::-webkit-scrollbar-thumb { background: var(--ember); border-radius: 2px; }
+:root{
+  --cream:#fdf8f4;--soft-white:#fff9f6;--ink:#2a1a3a;--ink-light:#5a4a6a;
+  --ink-faint:#9a8aaa;--gold:#c4a882;--gold-light:#e0c8a0;
+  --lavender:#c8a8e8;--rose:#e8a8c8;--peach:#f0c8a8;
+  --border:rgba(180,140,200,0.2);--glass:rgba(255,255,255,0.65);
+  --radius:16px;--radius-sm:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;}
+.aura-layer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.28;animation:blobFloat 8s ease-in-out infinite;}
+.blob-1{width:500px;height:500px;background:radial-gradient(circle,#d8b0f0,transparent);top:-100px;left:-100px;animation-delay:0s;}
+.blob-2{width:400px;height:400px;background:radial-gradient(circle,#f0b8d8,transparent);top:-50px;right:-80px;animation-delay:2s;}
+.blob-3{width:350px;height:350px;background:radial-gradient(circle,#f8d0b0,transparent);bottom:30%;left:30%;animation-delay:4s;}
+.blob-4{width:300px;height:300px;background:radial-gradient(circle,#b8d8f0,transparent);bottom:10%;right:10%;animation-delay:6s;}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(20px,20px) scale(1.05);}}
+.site-wrap{position:relative;z-index:1;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(253,248,244,0.88);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--border);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.nav-urdu{font-family:'Noto Nastaliq Urdu',serif;font-size:1rem;color:var(--gold);}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-light);text-decoration:none;transition:color 0.2s;cursor:pointer;}
+.nav-links a:hover{color:var(--lavender);}
+.nav-links a.active{color:var(--ink);border-bottom:0.5px solid var(--gold);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.hamburger span{width:22px;height:1.5px;background:var(--ink-light);border-radius:2px;transition:all 0.3s;}
+.mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;background:rgba(253,248,244,0.96);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--border);padding:20px 40px;z-index:99;flex-direction:column;gap:0;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-light);text-decoration:none;padding:14px 0;border-bottom:0.5px solid var(--border);cursor:pointer;}
+.page{display:none;padding-top:72px;}
+.page.active{display:block;}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px 60px;}
+.hero-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block;opacity:0;animation:fadeUp 0.8s ease 0.2s forwards;}
+.hero-urdu-big{font-family:'Noto Nastaliq Urdu',serif;font-size:1.8rem;color:var(--lavender);margin-bottom:12px;opacity:0;animation:fadeUp 0.8s ease 0.4s forwards;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,6vw,4.5rem);font-weight:300;font-style:italic;line-height:1.15;color:var(--ink);max-width:700px;margin:0 auto 20px;opacity:0;animation:fadeUp 0.8s ease 0.6s forwards;}
+.hero-title em{color:var(--lavender);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--ink-faint);max-width:480px;margin:0 auto 36px;line-height:1.7;opacity:0;animation:fadeUp 0.8s ease 0.8s forwards;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp 0.8s ease 1s forwards;}
+.btn-primary{padding:12px 28px;background:linear-gradient(135deg,#c4a0d8,#e8a0b8);border:none;border-radius:30px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 4px 20px rgba(196,160,216,0.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(196,160,216,0.4);}
+.btn-ghost{padding:12px 28px;background:transparent;border:0.5px solid var(--border);border-radius:30px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-light);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;backdrop-filter:blur(8px);}
+.btn-ghost:hover{border-color:var(--lavender);color:var(--ink);}
+.scroll-hint{margin-top:60px;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 0.8s ease 1.4s forwards;}
+.scroll-line{width:0.5px;height:40px;background:linear-gradient(to bottom,var(--border),transparent);}
+.scroll-text{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-faint);}
+
+/* HER INFINITE SHORE DRAMATIC FEATURE */
+.infinite-feature{
+  position:relative;
+  overflow:hidden;
+  background:#0a0512;
+  padding:100px 40px;
+  text-align:center;
+}
+.infinite-feature::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 40%,rgba(100,60,160,0.35) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 30% at 20% 80%,rgba(180,80,120,0.2) 0%,transparent 60%),
+    radial-gradient(ellipse 30% 40% at 80% 20%,rgba(196,168,130,0.15) 0%,transparent 60%);
+}
+.infinite-stars{position:absolute;inset:0;overflow:hidden;}
+.infinite-tag{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(196,168,130,0.7);display:block;margin-bottom:24px;position:relative;}
+.infinite-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,7rem);font-weight:300;font-style:italic;color:#f0e8f8;line-height:1.05;margin-bottom:16px;position:relative;text-shadow:0 0 80px rgba(160,100,220,0.3);}
+.infinite-title em{color:#d4b86a;display:block;font-size:0.45em;letter-spacing:0.2em;font-style:normal;text-transform:uppercase;margin-bottom:8px;}
+.infinite-divider{width:60px;height:0.5px;background:linear-gradient(90deg,transparent,rgba(196,168,130,0.6),transparent);margin:20px auto 24px;position:relative;}
+.infinite-blurb{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,2.5vw,1.4rem);color:rgba(220,200,240,0.8);max-width:600px;margin:0 auto 36px;line-height:1.8;position:relative;}
+.infinite-badge{display:inline-block;padding:10px 28px;border:0.5px solid rgba(196,168,130,0.4);border-radius:30px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#d4b86a;position:relative;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+
+/* QUOTE STRIP */
+.quote-strip{padding:60px 24px;text-align:center;background:linear-gradient(135deg,rgba(200,168,232,0.06),rgba(232,168,200,0.06));border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);}
+.big-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,3vw,1.7rem);color:var(--ink);max-width:600px;margin:0 auto;line-height:1.7;}
+.quote-mark{font-size:3rem;line-height:0.5;color:rgba(196,168,130,0.3);display:block;margin-bottom:12px;font-family:'Cormorant Garamond',serif;}
+
+/* SECTIONS */
+.section{padding:60px 40px;max-width:1000px;margin:0 auto;}
+.section-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:300;font-style:italic;color:var(--ink);margin-bottom:32px;}
+.divider-line{width:36px;height:0.5px;background:var(--gold-light);margin:12px 0 28px;}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.work-card{background:var(--glass);border:0.5px solid var(--border);border-radius:var(--radius);padding:22px;backdrop-filter:blur(12px);transition:transform 0.3s,box-shadow 0.3s,border-color 0.3s;cursor:pointer;position:relative;overflow:hidden;}
+.work-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--lavender),var(--rose));transform:scaleX(0);transform-origin:left;transition:transform 0.3s;}
+.work-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(180,140,200,0.12);border-color:rgba(200,168,232,0.4);}
+.work-card:hover::before{transform:scaleX(1);}
+.card-cover{width:100%;height:200px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:14px;}
+.card-type{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:block;}
+.card-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--ink);margin-bottom:6px;}
+.card-desc{font-size:11.5px;color:var(--ink-faint);line-height:1.7;margin-bottom:12px;}
+.card-tag{display:inline-block;font-size:9px;padding:4px 12px;border-radius:20px;background:rgba(180,140,200,0.1);color:var(--ink-light);letter-spacing:1px;}
+.coming-soon-badge{display:inline-block;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:20px;background:linear-gradient(135deg,rgba(196,160,216,0.2),rgba(232,160,184,0.2));color:var(--lavender);border:0.5px solid rgba(196,160,216,0.3);}
+
+/* ABOUT STRIP HOME */
+.about-home{padding:60px 40px;background:linear-gradient(135deg,rgba(200,168,232,0.05),rgba(240,200,168,0.05));border-top:0.5px solid var(--border);}
+.about-home-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center;}
+.author-avatar{width:110px;height:110px;border-radius:50%;object-fit:cover;border:2px solid rgba(200,168,232,0.3);box-shadow:0 4px 20px rgba(180,140,200,0.15);}
+.author-avatar-placeholder{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#d8b0e8,#f0b8c8);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-style:italic;color:#fff;border:2px solid rgba(200,168,232,0.3);}
+.about-home-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:var(--ink);margin-bottom:8px;}
+
+/* REVIEWS */
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px;}
+.review-card{background:var(--glass);border:0.5px solid var(--border);border-radius:var(--radius);padding:18px;backdrop-filter:blur(10px);}
+.stars-display{color:var(--gold);font-size:13px;letter-spacing:3px;margin-bottom:8px;}
+.review-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;color:var(--ink-light);line-height:1.7;}
+.review-name{font-size:10px;letter-spacing:1.5px;color:var(--ink-faint);margin-top:10px;text-transform:uppercase;}
+.review-form{background:var(--glass);border:0.5px solid var(--border);border-radius:var(--radius);padding:28px;backdrop-filter:blur(12px);max-width:600px;}
+.form-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--ink);margin-bottom:18px;}
+.star-selector{display:flex;gap:8px;margin-bottom:16px;align-items:center;}
+.star-btn{font-size:22px;color:rgba(196,168,130,0.3);cursor:pointer;background:none;border:none;transition:color 0.15s,transform 0.15s;padding:0;}
+.star-btn.active,.star-btn:hover{color:var(--gold);}
+.star-btn:hover{transform:scale(1.2);}
+.star-label{font-size:10px;letter-spacing:1.5px;color:var(--ink-faint);margin-left:8px;text-transform:uppercase;}
+.form-input,.form-textarea{width:100%;background:rgba(255,255,255,0.7);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;font-size:13px;color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;margin-bottom:12px;outline:none;transition:border-color 0.2s;resize:none;}
+.form-input:focus,.form-textarea:focus{border-color:rgba(200,168,232,0.5);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.submit-btn{width:100%;padding:13px;background:linear-gradient(135deg,#c4a0d8,#e8a0b8);border:none;border-radius:30px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 4px 16px rgba(196,160,216,0.25);}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,160,216,0.35);}
+.success-msg{display:none;text-align:center;padding:16px;color:var(--gold);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;}
+
+/* ABOUT PAGE */
+.about-hero{padding:80px 40px 60px;max-width:900px;margin:0 auto;display:grid;grid-template-columns:260px 1fr;gap:60px;align-items:start;}
+.about-portrait-wrap{position:sticky;top:100px;text-align:center;}
+.about-portrait{width:100%;max-width:220px;border-radius:var(--radius);object-fit:cover;border:0.5px solid var(--border);box-shadow:0 8px 40px rgba(180,140,200,0.15);margin-bottom:16px;}
+.about-portrait-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--ink);}
+.about-portrait-urdu{font-family:'Noto Nastaliq Urdu',serif;font-size:1rem;color:var(--gold);display:block;margin-top:4px;}
+.about-portrait-tag{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-faint);margin-top:6px;display:block;}
+.about-content h1{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;font-style:italic;color:var(--ink);margin-bottom:8px;}
+.about-content .about-sub{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:28px;display:block;}
+.about-content p{font-size:14px;line-height:2;color:var(--ink-light);margin-bottom:16px;}
+.about-content p em{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05em;color:var(--ink);}
+.about-content p strong{font-weight:400;color:var(--ink);}
+.about-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;}
+.about-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 16px;border-radius:20px;border:0.5px solid var(--border);color:var(--ink-light);background:rgba(255,255,255,0.5);}
+
+/* PAGE HERO */
+.page-hero{padding:80px 40px 40px;max-width:1000px;margin:0 auto;}
+.page-hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:300;font-style:italic;color:var(--ink);margin-bottom:10px;}
+.page-hero-sub{font-size:13px;color:var(--ink-faint);max-width:500px;line-height:1.8;}
+.works-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:20px 40px 60px;max-width:1000px;margin:0 auto;}
+
+/* POETRY READER */
+.poetry-reader{max-width:700px;margin:0 auto;padding:20px 40px 60px;}
+.poem-cover{width:100%;max-width:300px;display:block;margin:0 auto 40px;border-radius:var(--radius);box-shadow:0 8px 40px rgba(180,140,200,0.15);}
+.poem-title-main{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;font-style:italic;color:var(--ink);margin-bottom:6px;text-align:center;}
+.poem-author{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:48px;display:block;}
+.poem-stanza{margin-bottom:48px;padding:32px;background:var(--glass);border:0.5px solid var(--border);border-radius:var(--radius);backdrop-filter:blur(10px);}
+.poem-stanza-num{font-family:'Cormorant Garamond',serif;font-size:0.8rem;letter-spacing:3px;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;}
+.poem-stanza-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:var(--ink);margin-bottom:20px;}
+.poem-lines{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:2.1;color:var(--ink-light);}
+.poem-break{text-align:center;letter-spacing:8px;color:var(--gold);opacity:0.4;font-size:10px;margin:8px 0 0;}
+.poem-final-note{text-align:center;padding:40px 20px;border-top:0.5px solid var(--border);margin-top:20px;}
+.poem-final-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--ink-light);line-height:1.8;}
+.poem-end{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--gold);display:block;margin-top:16px;}
+
+/* STARDUST STORY READER */
+.story-reader{max-width:700px;margin:0 auto;padding:20px 40px 80px;}
+.story-cover-img{width:100%;max-width:280px;display:block;margin:0 auto 48px;border-radius:var(--radius);box-shadow:0 12px 60px rgba(100,80,180,0.2);}
+.story-title-main{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;font-style:italic;color:var(--ink);margin-bottom:6px;text-align:center;line-height:1.2;}
+.story-author{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:8px;display:block;}
+.story-blurb{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--ink-faint);text-align:center;max-width:480px;margin:0 auto 56px;line-height:1.8;}
+.story-divider{width:60px;height:0.5px;background:linear-gradient(90deg,transparent,var(--gold-light),transparent);margin:0 auto 48px;}
+.story-body p{font-family:'Cormorant Garamond',serif;font-size:1.05rem;line-height:2;color:var(--ink-light);margin-bottom:20px;}
+.story-body p em{font-style:italic;color:var(--ink);}
+.story-body p strong{font-weight:500;color:var(--ink);}
+.story-end{text-align:center;padding:48px 0 20px;border-top:0.5px solid var(--border);margin-top:40px;}
+.story-end-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--ink);}
+.story-end-attr{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-top:12px;}
+
+/* BLOG */
+.blog-list{padding:20px 40px 60px;max-width:800px;margin:0 auto;}
+.empty-state{text-align:center;padding:80px 24px;max-width:400px;margin:0 auto;}
+.empty-state-icon{font-size:2rem;margin-bottom:16px;opacity:0.4;}
+.empty-state-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:var(--ink);margin-bottom:8px;}
+.empty-state-text{font-size:12px;color:var(--ink-faint);line-height:1.8;}
+
+/* CONTACT */
+.contact-wrap{padding:80px 40px 60px;max-width:700px;margin:0 auto;}
+.contact-form-full{background:var(--glass);border:0.5px solid var(--border);border-radius:var(--radius);padding:36px;backdrop-filter:blur(12px);margin-top:32px;}
+.contact-links{display:flex;flex-direction:column;gap:0;margin-top:32px;}
+.contact-link{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:0.5px solid var(--border);text-decoration:none;transition:padding-left 0.2s;}
+.contact-link:hover{padding-left:8px;}
+.contact-link-name{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-light);}
+.contact-link-handle{font-size:11px;color:var(--ink-faint);}
+
+/* FOOTER */
+footer{padding:24px 40px;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;background:rgba(253,248,244,0.6);backdrop-filter:blur(10px);}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--ink-light);}
+.footer-urdu{font-family:'Noto Nastaliq Urdu',serif;font-size:0.9rem;color:var(--gold);margin-left:6px;}
+.footer-copy{font-size:10px;letter-spacing:1px;color:var(--ink-faint);}
+.footer-links{display:flex;gap:16px;}
+.footer-links a{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-faint);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--lavender);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.fade-in{opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .mobile-menu{padding:0 20px;}
+  .hero{padding:100px 20px 60px;}
+  .hero-title{font-size:2rem;}
+  .infinite-feature{padding:80px 20px;}
+  .section{padding:40px 20px;}
+  .about-hero{grid-template-columns:1fr;padding:80px 20px 40px;gap:32px;}
+  .about-portrait-wrap{position:static;display:flex;flex-direction:column;align-items:center;}
+  .about-portrait{max-width:160px;}
+  .page-hero{padding:80px 20px 32px;}
+  .works-grid{padding:16px 20px 40px;grid-template-columns:1fr;}
+  .poetry-reader,.story-reader{padding:20px 20px 60px;}
+  .blog-list,.contact-wrap{padding:20px 20px 40px;}
+  .contact-form-full{padding:20px;}
+  .about-home-inner{grid-template-columns:1fr;text-align:center;}
+  footer{padding:20px;flex-direction:column;text-align:center;}
+  .form-row{grid-template-columns:1fr;}
+  .review-form{padding:20px;}
+}
 </style>
 </head>
 <body>
+<div class="aura-layer">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+</div>
+<div class="site-wrap">
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">BAKHTAWARK</a>
+  <a class="nav-brand" href="#" onclick="showPage('home')">Bakhtawar <span class="nav-urdu">بختاور</span></a>
   <ul class="nav-links">
-    <li><a href="#writing">Writing</a></li>
-    <li><a href="#poems">Poems</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+    <li><a onclick="showPage('stories')" id="nav-stories">Stories</a></li>
+    <li><a onclick="showPage('poetry')" id="nav-poetry">Poetry</a></li>
+    <li><a onclick="showPage('blog')" id="nav-blog">Blog</a></li>
+    <li><a onclick="showPage('about')" id="nav-about">About</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact">Contact</a></li>
   </ul>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg-text">بختاور</div>
-  <p class="hero-eyebrow">Writer · Artist · بختاور</p>
-  <h1 class="hero-title">
-    Words that<br><em>bleed</em> before<br>they breathe.
-  </h1>
-  <div class="hero-bottom">
-    <p class="hero-desc">
-      A home for stories that live in the space between language and feeling — where Urdu breathes inside English and metaphors do what explanations cannot.
-    </p>
-    <div class="hero-scroll">scroll</div>
-  </div>
-</section>
+<div class="mobile-menu" id="mobileMenu">
+  <a onclick="showPage('home');toggleMenu()">Home</a>
+  <a onclick="showPage('stories');toggleMenu()">Stories</a>
+  <a onclick="showPage('poetry');toggleMenu()">Poetry</a>
+  <a onclick="showPage('blog');toggleMenu()">Blog</a>
+  <a onclick="showPage('about');toggleMenu()">About</a>
+  <a onclick="showPage('contact');toggleMenu()">Contact</a>
+</div>
 
-<!-- MARQUEE -->
-<div class="marquee-wrap">
-  <div class="marquee-track">
-    <span class="marquee-item">prose <span class="marquee-dot">·</span> poetry <span class="marquee-dot">·</span> literary fiction <span class="marquee-dot">·</span> art <span class="marquee-dot">·</span> bakhtawark <span class="marquee-dot">·</span> بختاور <span class="marquee-dot">·</span> writer <span class="marquee-dot">·</span> storyteller <span class="marquee-dot">·</span></span>
-    <span class="marquee-item">prose <span class="marquee-dot">·</span> poetry <span class="marquee-dot">·</span> literary fiction <span class="marquee-dot">·</span> art <span class="marquee-dot">·</span> bakhtawark <span class="marquee-dot">·</span> بختاور <span class="marquee-dot">·</span> writer <span class="marquee-dot">·</span> storyteller <span class="marquee-dot">·</span></span>
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+
+  <div class="hero">
+    <span class="hero-eyebrow">writer · poet · artist · Karachi</span>
+    <div class="hero-urdu-big">بختاور</div>
+    <h1 class="hero-title">Where <em>magic</em> holds your grief,<br>and love finds you anyway.</h1>
+    <p class="hero-sub">Stories of rivers, centuries, stardust and the love between. Welcome to Bakhtawar's world.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('stories')">Explore Stories</button>
+      <button class="btn-ghost" onclick="showPage('poetry')">Read Poetry</button>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      <span class="scroll-text">Scroll</span>
+    </div>
+  </div>
+
+  <!-- HER INFINITE SHORE DRAMATIC FEATURE -->
+  <div class="infinite-feature" id="infiniteStars">
+    <span class="infinite-tag">✦ Coming Soon · Short Story</span>
+    <h2 class="infinite-title">
+      <em>Her Infinite Shore</em>
+    </h2>
+    <div class="infinite-divider"></div>
+    <p class="infinite-blurb">The river always knew the sea would swallow her whole. She ran toward it anyway. This is what that cost her — and what it finally gave back.</p>
+    <span class="infinite-badge">✦ Coming Soon ✦</span>
+  </div>
+
+  <div class="quote-strip">
+    <span class="quote-mark">"</span>
+    <p class="big-quote">I write the things that sit in the throat too long — and leave them somewhere someone can find them.</p>
+  </div>
+
+  <div class="section fade-in">
+    <span class="section-eye">Featured Works</span>
+    <h2 class="section-title">Stories worth staying for</h2>
+    <div class="divider-line"></div>
+    <div class="cards-grid">
+      <div class="work-card" onclick="showPage('stardust')">
+        <img src="Biru_estetik_menghangatkan_hati_pasangan_romantis_wattpad_book_cover.png" alt="Stardust Remembers You" class="card-cover" onerror="this.style.display='none'">
+        <span class="card-type">Short Story</span>
+        <p class="card-title">Stardust Remembers You</p>
+        <p class="card-desc">Two souls who never met in real life, yet somehow found each other in the only place that belongs to no one.</p>
+        <span class="card-tag">stardust · souls · magic</span>
+      </div>
+      <div class="work-card" onclick="showPage('poetry')">
+        <span class="card-type">Poetry · 10 Verses</span>
+        <p class="card-title">The Wrong Century</p>
+        <p class="card-desc">A boy from the past followed a glowing sunflower through time and landed in the seat across from her.</p>
+        <span class="card-tag">time · sunflower · fate</span>
+      </div>
+      <div class="work-card" style="background:rgba(10,5,18,0.85);border:0.5px solid rgba(196,168,130,0.2);">
+        <span class="card-type" style="color:#d4b86a;">Coming Soon</span>
+        <p class="card-title" style="color:#e8e0f0;font-family:'Cormorant Garamond',serif;font-style:italic;">Her Infinite Shore</p>
+        <p class="card-desc" style="color:rgba(220,200,240,0.6);">The river always knew the sea would swallow her whole. She ran toward it anyway.</p>
+        <span class="coming-soon-badge">Notify Me</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-home fade-in">
+    <div class="about-home-inner">
+      <img src="684977220_18086908262606579_815270010783047254_n.jpg" alt="Bakhtawar" class="author-avatar" onerror="this.outerHTML='<div class=\'author-avatar-placeholder\'>B</div>'">
+      <div>
+        <p class="about-home-name">Bakhtawar بختاور</p>
+        <p style="font-size:13px;line-height:1.9;color:var(--ink-light);margin-bottom:16px;">A writer and artist from Karachi, Pakistan. I write fiction that doesn't flinch from grief, doesn't rush past loss, and doesn't let love be anything less than everything it is.</p>
+        <button class="btn-ghost" style="font-size:10px;" onclick="showPage('about')">Read more about me →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <span class="section-eye">Reader Voices</span>
+    <h2 class="section-title">What they felt</h2>
+    <div class="divider-line"></div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="stars-display">★★★★★</div>
+        <p class="review-text">"Her writing made me feel seen in ways I couldn't explain. Like she reached into my chest and put words to something I'd carried for years."</p>
+        <p class="review-name">— Zara A.</p>
+      </div>
+      <div class="review-card">
+        <div class="stars-display">★★★★★</div>
+        <p class="review-text">"The Wrong Century is the most romantic thing I have read this year. The sunflower door. I think about it constantly."</p>
+        <p class="review-name">— Maha K.</p>
+      </div>
+      <div class="review-card">
+        <div class="stars-display">★★★★★</div>
+        <p class="review-text">"Stardust Remembers You broke me open. The kind of story you finish and just sit with for a while."</p>
+        <p class="review-name">— Alina R.</p>
+      </div>
+    </div>
+    <div class="review-form">
+      <p class="form-title">Leave your words here</p>
+      <div class="star-selector">
+        <button class="star-btn" onclick="setRating(1)">★</button>
+        <button class="star-btn" onclick="setRating(2)">★</button>
+        <button class="star-btn" onclick="setRating(3)">★</button>
+        <button class="star-btn" onclick="setRating(4)">★</button>
+        <button class="star-btn" onclick="setRating(5)">★</button>
+        <span class="star-label" id="starLabel">tap to rate</span>
+      </div>
+      <div class="form-row">
+        <input class="form-input" type="text" id="reviewName" placeholder="Your name">
+        <input class="form-input" type="text" id="reviewWork" placeholder="Which story?">
+      </div>
+      <textarea class="form-textarea" id="reviewText" rows="4" placeholder="What did you feel reading her work?"></textarea>
+      <button class="submit-btn" onclick="submitReview()">Submit your review</button>
+      <div class="success-msg" id="reviewSuccess">✦ Thank you — your words mean everything. ✦</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- STORIES PAGE -->
+<div id="page-stories" class="page">
+  <div class="page-hero">
+    <span class="section-eye">Fiction</span>
+    <h1 class="page-hero-title">Stories</h1>
+    <p class="page-hero-sub">Worlds built from real heartbreak. Magic that exists not to escape pain, but to help you sit with it.</p>
+    <div class="divider-line"></div>
+  </div>
+  <div class="works-grid">
+    <div class="work-card" onclick="showPage('stardust')">
+      <img src="Biru_estetik_menghangatkan_hati_pasangan_romantis_wattpad_book_cover.png" alt="Stardust Remembers You" class="card-cover" onerror="this.style.display='none'">
+      <span class="card-type">Short Story · Read Now</span>
+      <p class="card-title">Stardust Remembers You</p>
+      <p class="card-desc">Two souls who never met in real life, yet somehow found each other in the only place that belongs to no one.</p>
+      <span class="card-tag">stardust · souls · magic</span>
+    </div>
+    <div class="work-card" style="background:rgba(10,5,18,0.85);border:0.5px solid rgba(196,168,130,0.2);">
+      <span class="card-type" style="color:#d4b86a;">Coming Soon</span>
+      <p class="card-title" style="color:#e8e0f0;font-family:'Cormorant Garamond',serif;font-style:italic;">Her Infinite Shore</p>
+      <p class="card-desc" style="color:rgba(220,200,240,0.6);">The river always knew the sea would swallow her whole. She ran toward it anyway. This is what that cost her — and what it finally gave back.</p>
+      <span class="coming-soon-badge">Coming Soon</span>
+    </div>
   </div>
 </div>
 
-<!-- WRITING -->
-<section class="writing" id="writing">
-  <div class="section-header reveal">
-    <h2 class="section-title">Latest <em>Writing</em></h2>
-    <a href="#" class="section-link">All pieces</a>
-  </div>
-
-  <div class="posts-grid">
-    <a href="#" class="post-card featured reveal">
-      <div class="post-card-inner">
-        <p class="post-tag">Short story</p>
-        <h3 class="post-title">She Who Ran to the Sea</h3>
-        <p class="post-excerpt">A river does not run toward the sea because she is foolish. She runs because that is what rivers were told they are supposed to do — and this is the story of what happens when she finally stops.</p>
-        <p class="post-meta">2025 · 18 min read</p>
+<!-- STARDUST FULL STORY PAGE -->
+<div id="page-stardust" class="page">
+  <div class="story-reader">
+    <img src="Biru_estetik_menghangatkan_hati_pasangan_romantis_wattpad_book_cover.png" alt="Stardust Remembers You" class="story-cover-img" onerror="this.style.display='none'">
+    <h1 class="story-title-main">Stardust Remembers You</h1>
+    <span class="story-author">by Bakhtawar · بختاور</span>
+    <p class="story-blurb">Two souls who never met in real life, yet somehow found each other in the only place that belongs to no one.</p>
+    <div class="story-divider"></div>
+    <div class="story-body">
+      <p>There is a place that exists between sleeping and waking, between one heartbeat and the next, between the last word of a prayer and the silence that follows it. It has no name in any language that has been written down. But those who have found it — those rare, tender souls who arrived there not by choice but by some ancient arrangement between the universe and their particular longing — they always describe it the same way.</p>
+      <p><em>Like coming home to a place you have never been.</em></p>
+      <p>Nyla found it the night she stopped trying to sleep. It was three in the morning and the city outside her window was doing what cities do at three in the morning — breathing quietly, carrying its own secrets, letting its lights blur into something that looked almost like stars if you were tired enough and sad enough and open enough to let it.</p>
+      <p>She had been writing. She was always writing. Words were the only honest thing she knew how to do, the only place she felt like herself rather than a performance of herself. She wrote about the moon. She wrote about the particular grief of loving something that does not know it is being loved. She wrote: <em>the stardust in me recognises the stardust in you, and it has been trying to find you in every room I have ever entered.</em></p>
+      <p>She put down her pen. She closed her eyes for what she thought would be a moment.</p>
+      <p>She opened them somewhere else entirely.</p>
+      <p>The place was lit the colour of early morning — that particular blue that is not quite darkness and not quite light, the colour the sky holds just before it commits to dawn. There was a shoreline she could not see the end of, and the water was still in a way that actual water never is, and the stars above were the wrong stars, arranged in patterns she almost recognised the way you almost recognise a face in a dream.</p>
+      <p>And there was a boy sitting at the edge of the water with his shoes beside him and his feet in the waves and a notebook in his lap, writing.</p>
+      <p>She stood very still. She had the feeling — physical, certain, like a hand placed gently on the chest — that this had been arranged. That something older and more patient than either of them had been waiting for this specific intersection of two specific souls for a very long time.</p>
+      <p>His name was Zayan. She learned this when he looked up and said it, simply, the way you introduce yourself to someone you have already met in all the ways that count.</p>
+      <p><em>"Nyla,"</em> she said. Her own name felt different in this place. More like what it actually was.</p>
+      <p>He nodded, as if this confirmed something he had suspected.</p>
+      <p>They sat together at the edge of the water that was not water and the shore that was not shore, and they talked the way people talk when time does not apply — without urgency, without the particular performance that real life requires, without anything to prove. He told her he wrote because the world moved too fast for him and words were the only way he could slow it down enough to see it clearly. She told him she wrote because she had feelings that arrived before she had names for them, and writing was how she found the names.</p>
+      <p><em>"Like what?"</em> he asked.</p>
+      <p>She thought for a moment. The water moved around their feet, or the water that was not water, warm and weightless and impossible.</p>
+      <p><em>"Like this,"</em> she said. <em>"Whatever this is."</em></p>
+      <p>He smiled at the horizon. The smile of someone who has been given the exact answer they needed without knowing they were asking a question.</p>
+      <p>They came back every night. Or what felt like every night — in this place time moved differently, folding back on itself, running forward and sideways and in directions that did not have names yet. Each time she found him already there, or arrived to find him arriving at the same moment, as if the place knew when they were both ready and opened itself accordingly.</p>
+      <p>They built something there that had no equivalent in the world they each returned to separately. Something that was not quite friendship because it was too warm, and not quite love because it had no claim, and not quite anything that existed in the ordinary vocabulary of human connection. It was its own category. It was the feeling of being completely known and completely safe and completely seen by someone who required nothing from you except your honest self.</p>
+      <p>She wrote about it in the world she woke to. She wrote carefully, protecting the shape of it, the way you carry water in cupped hands. She wrote: <em>I have been meeting someone in the space between my heartbeats and I do not know if he is real in the way the world counts real, but I know he is true, and true has always mattered more to me than real.</em></p>
+      <p>He was reading across the not-water one evening — she could tell by the way he held the notebook, close to his face, tilted slightly toward the blue light — when he looked up suddenly and said:</p>
+      <p><em>"Do you think this is all we get?"</em></p>
+      <p>She knew what he meant. She had been thinking it too, in the way she thought things in this place — not as words first but as weather, as the particular pressure of something moving through the chest.</p>
+      <p><em>"I don't know,"</em> she said honestly. <em>"I know it's enough."</em></p>
+      <p><em>"Is it?"</em></p>
+      <p>She looked at him across the water that was not water. At the boy who had never existed in any room she had ever entered in the world that counted real, who she would never pass on a street or sit across from in a café, who she knew in a language that had no alphabet and no grammar, only feeling.</p>
+      <p><em>"It is,"</em> she said. <em>"It has to be. Some things exist in the in-between and that's all they need to be real."</em></p>
+      <p>He wrote something down. She did not ask what.</p>
+      <p>Later — much later, in a time that could not be measured — she woke and reached for her notebook and found a line she did not write. In handwriting that was not hers, in the particular dark ink of someone who pressed hard when they meant something:</p>
+      <p><em>The stardust in me remembers you. I think it always will.</em></p>
+      <p>She held the notebook for a long time in the early morning light.</p>
+      <p>She thought about all the ways things can be real. About how the universe is mostly space between things — between stars, between atoms, between heartbeats — and how the most important things tend to live in that space, in the in-between, in the place that belongs to no one and therefore belongs to everyone who needs it.</p>
+      <p>She thought: <em>some loves are not for finding in the daylight world. Some loves exist to remind you that you are made of the same ancient light as everything that has ever mattered. Some loves are stardust recognising stardust across whatever distance exists between one soul and another.</em></p>
+      <p>She opened her notebook to a new page.</p>
+      <p>She began to write.</p>
+    </div>
+    <div class="story-end">
+      <p class="story-end-text">"The stardust in me remembers you.<br>I think it always will."</p>
+      <span class="story-end-attr">— Stardust Remembers You · by Bakhtawar</span>
+      <div style="margin-top:24px;">
+        <button class="btn-ghost" onclick="showPage('stories')" style="font-size:10px;">← Back to Stories</button>
       </div>
-    </a>
-
-    <a href="#" class="post-card reveal" style="transition-delay:0.1s">
-      <div class="post-card-inner">
-        <p class="post-tag">Essay</p>
-        <h3 class="post-title">On First Love and Its Wreckage</h3>
-        <p class="post-excerpt">The thing about first love is it does not ask permission to rearrange you.</p>
-        <p class="post-meta">2025 · 9 min read</p>
-      </div>
-    </a>
-
-    <a href="#" class="post-card reveal" style="transition-delay:0.2s">
-      <div class="post-card-inner">
-        <p class="post-tag">Prose poetry</p>
-        <h3 class="post-title">Infinity, He Said Casually</h3>
-        <p class="post-excerpt">As if infinity were something you could say in a corridor and walk away from.</p>
-        <p class="post-meta">2025 · 5 min read</p>
-      </div>
-    </a>
+    </div>
   </div>
-</section>
+</div>
 
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="about-left reveal">
-    <p class="about-label">About</p>
-    <h2 class="about-heading">I write what I<br>cannot <em>say out loud.</em></h2>
-    <p class="about-body">
-      I am Bakhtawark — بختاور — a writer and artist living somewhere between Urdu and English, between what happened and what it meant. I write literary prose, poetry, and long-form stories about love, identity, grief, and the quiet violence of being misunderstood.<br><br>
-      My work lives at the intersection of metaphor and feeling — where rivers carry heartbreak and the moon forgets she has her own light.
-    </p>
+<!-- POETRY PAGE -->
+<div id="page-poetry" class="page">
+  <div class="page-hero">
+    <span class="section-eye">Poetry</span>
+    <h1 class="page-hero-title">Poems</h1>
+    <p class="page-hero-sub">For the feelings that don't fit into sentences.</p>
+    <div class="divider-line"></div>
   </div>
-  <div class="about-right reveal" style="transition-delay:0.15s">
-    <div class="about-quote-block">
-      <p class="about-quote">
-        "Not every story ends with two people. Some stories end with one woman, finally whole, walking into the light she built herself."
+  <div class="works-grid">
+    <div class="work-card" onclick="showPage('wrongcentury')">
+      <span class="card-type">Poetry · 10 Verses · Read Now</span>
+      <p class="card-title">The Wrong Century</p>
+      <p class="card-desc">A boy from the past followed a glowing sunflower through time. She was already there, writing. Some souls find each other across every century.</p>
+      <span class="card-tag">Rakin & Izzah · sunflower · fate</span>
+    </div>
+  </div>
+</div>
+
+<!-- THE WRONG CENTURY FULL POEM PAGE -->
+<div id="page-wrongcentury" class="page">
+  <div class="poetry-reader">
+    <h1 class="poem-title-main">The Wrong Century</h1>
+    <span class="poem-author">by Bakhtawar · بختاور</span>
+
+    <div class="poem-stanza">
+      <span class="poem-stanza-num">I</span>
+      <p class="poem-stanza-title">The Golden Glimmer</p>
+      <p class="poem-lines">
+        one day, a poet was wandering through a golden field,<br>
+        where sunflowers swayed in their whimsical way,<br>
+        one sunflower gleamed brighter than the morning sun<br>
+        and pulled him through its glimmer, before he thought to run.<br>
+        he blinked into a world, he didn't know,<br>
+        a moving train, a window's golden glow,<br>
+        a century ahead of all he'd known,<br>
+        but somehow, not wholly alone.
       </p>
-      <p class="about-quote-attr">— She Who Ran to the Sea</p>
+      <span class="poem-break">· · ·</span>
+    </div>
+
+    <div class="poem-stanza">
+      <span class="poem-stanza-num">II</span>
+      <p class="poem-stanza-title">The Girl Who Wrote First</p>
+      <p class="poem-lines">
+        in front of his seat, a girl sat writing still,<br>
+        her pen running fast, against her will,<br>
+        as if the words came before she thought,<br>
+        as if she penned what dreamers forgot.<br>
+        her name was Izzah, dressed in starlit light,<br>
+        a writer chasing dreams through the night.<br>
+        she glanced up and caught a stranger's eye,<br>
+        and felt a silent ache of knowing why.
+      </p>
+      <span class="poem-break">· · ·</span>
+    </div>
+
+    <div class="poem-stanza">
+      <span class="poem-stanza-num">III</span>
+      <p class="poem-stanza-title">Ink & Strangers</p>
+      <p class="poem-lines">
+        a boy named Rakin — ink upon his hands,<br>
+        a poet who belonged to older, quieter land,<br>
+        who breathed in metaphors and wrote in rhymes,<br>
+        and felt, somehow, he'd lived here in past times.<br>
+        the carriage held them like a breath held still,<br>
+        two seats, one window, two hearts with the will.<br>
+        she said: <em>You write.</em> He replied: <em>as you do.</em><br>
+        and something in the train already knew.
+      </p>
+      <span class="poem-break">· · ·</span>
+    </div>
+
+    <div class="poem-stanza">
+      <span class="poem-stanza-num">IV</span>
+      <p class="poem-stanza-title">The Confrontation</p>
+      <p class="poem-lines">
+        she asked him where he came from, and which time.<br>
+        he smirked, like someone who had lost the game<br>
+        of keeping secrets folded into time<br>
+        and laid a century open from his heart.<br>
+        <em>a field of gold, a sunflower lit like flame,</em><br>
+        <em>I touched its glimmer, and nothing felt the same.</em><br>
+        <em>I landed in this train, this year, this world —</em><br>
+        <em>I just know your face, and I'm meant to be here.</em>
+      </p>
+      <span class="poem-break">· · ·</span>
+    </div>
+
+    <div class="poem-stanza">
+      <span class="poem-stanza-num">V</span>
+      <p class="poem-stanza-title">Sunflower Boy</p>
+      <p class="poem-lines">
+        she laughed — the kind that comes before tears,<br>
+        the happiness of someone who finally hears<br>
+        the name she'd been writing carefully masked,<br>
+        a secret kept so long, it learned to hide.<br>
+        she had always written of the past,<br>
+        of bright souls too old for times too worn,<br>
+        and here, sunflower boy crossed centuries to find his sun —<br>
+        he turned toward the one, and it's only her.
+      </p>
+      <span class="poem-break">· · ·</span>
+    </div>
+
+    <div class="poem-stanza">
+      <span class="poem-stanza-num">VI</span>
+      <p class="poem-stanza-title">The Tunnel</p>
+      <p class="poem-lines">
+        the sun blended in amber past the hill,<br>
+        the train moved fast then suddenly grew still.<br>
+        ahead, a dark tunnel devoured the light,<br>
+        and took the golden afternoon to night.<br>
+        he stood and looked at her, the way the sun<br>
+        looks at the planet when the day is done.<br>
+        the tunnel took the last of what remained,<br>
+        and when the light spat out — he had vanished.
+      </p>
+      <span class="poem-break">· · ·</span>
+    </div>
+
+    <div class="poem-stanza">
+      <span class="poem-stanza-num">VII</span>
+      <p class="poem-stanza-title">Third From the Window</p>
+      <p class="poem-lines">
+        before the dark could take his dazzling glare,<br>
+        his voice came soft — like smoke above a fire:<br>
+        <em>find my book in the old library's keep,</em><br>
+        <em>third from the window where the silence runs deep.</em><br>
+        <em>write what you want inside its yellowed seam,</em><br>
+        <em>I'll find every word across each year and dream.</em><br>
+        <em>even if it takes a hundred years to come,</em><br>
+        <em>I'll cross each century, I'll cross each sea — I'll find you.</em>
+      </p>
+      <span class="poem-break">· · ·</span>
+    </div>
+
+    <div class="poem-stanza">
+      <span class="poem-stanza-num">VIII</span>
+      <p class="poem-stanza-title">Letters to Nobody</p>
+      <p class="poem-lines">
+        so she wrote summer, winter, spring and fall,<br>
+        she wrote of rain and glittering light in the hall,<br>
+        of sunflowers that glowed at dusk like flame,<br>
+        of the brown boy who came, and didn't stay.<br>
+        she pressed her words like petals in his book with care,<br>
+        third from the window in the library there,<br>
+        and breathed them all gently to the past —<br>
+        a light on, for a love too real to let the silence last.
+      </p>
+      <span class="poem-break">· · ·</span>
+    </div>
+
+    <div class="poem-stanza">
+      <span class="poem-stanza-num">IX</span>
+      <p class="poem-stanza-title">The Last Page</p>
+      <p class="poem-lines">
+        one cold evening, she opened the last page<br>
+        to write the final letter of her quiet age.<br>
+        but found the last page filled with ink.<br>
+        not hers. She stopped. She didn't dare to think.<br>
+        his hands, his words, his constant glimmer,<br>
+        the ink that doesn't leave — it leaves a mark:<br>
+        <em>I found them all, each letter, each word, each line —</em><br>
+        <em>turn around, Izzah. The timing's finally mine.</em>
+      </p>
+      <span class="poem-break">· · ·</span>
+    </div>
+
+    <div class="poem-stanza">
+      <span class="poem-stanza-num">X</span>
+      <p class="poem-stanza-title">At Last</p>
+      <p class="poem-lines">
+        she turned —<br>
+        and the whole room filled with gold,<br>
+        sunflower light, warm, Rakin stood smiling bold,<br>
+        ink on his hands, same golden brown glittery light,<br>
+        still slightly wrong, yet perfectly right.<br>
+        the wrong century, right soul, right on time,<br>
+        two writers found each other, across time.<br>
+        a sunflower led him crossed the centuries —<br>
+        and she had been worth crossing for.
+      </p>
+    </div>
+
+    <div class="poem-final-note">
+      <p class="poem-final-text">
+        centuries passed, the pages grew<br>
+        but every word she ever wrote was,<br>
+        <em>"always you."</em>
+      </p>
+      <span class="poem-end">— The Wrong Century · by Bakhtawar</span>
+      <div style="margin-top:24px;">
+        <button class="btn-ghost" onclick="showPage('poetry')" style="font-size:10px;">← Back to Poetry</button>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- POEMS STRIP -->
-<section class="poems-strip" id="poems">
-  <div class="section-header reveal">
-    <h2 class="section-title">Poems &amp; <em>Fragments</em></h2>
-    <a href="#" class="section-link">All poems</a>
+<!-- BLOG PAGE -->
+<div id="page-blog" class="page">
+  <div class="page-hero">
+    <span class="section-eye">Articles & Blog</span>
+    <h1 class="page-hero-title">Blog</h1>
+    <p class="page-hero-sub">Thoughts that need room to breathe.</p>
+    <div class="divider-line"></div>
   </div>
-
-  <div class="poems-list">
-    <a href="#" class="poem-row reveal">
-      <span class="poem-num">001</span>
-      <span class="poem-name">The Gravity of <em>Borrowed Light</em></span>
-      <span class="poem-arrow">→</span>
-    </a>
-    <a href="#" class="poem-row reveal" style="transition-delay:0.05s">
-      <span class="poem-num">002</span>
-      <span class="poem-name">What the <em>River Kept</em></span>
-      <span class="poem-arrow">→</span>
-    </a>
-    <a href="#" class="poem-row reveal" style="transition-delay:0.1s">
-      <span class="poem-num">003</span>
-      <span class="poem-name"><em>Infinity</em> as a Casual Remark</span>
-      <span class="poem-arrow">→</span>
-    </a>
-    <a href="#" class="poem-row reveal" style="transition-delay:0.15s">
-      <span class="poem-num">004</span>
-      <span class="poem-name">He Said <em>Friend</em> Like a Verdict</span>
-      <span class="poem-arrow">→</span>
-    </a>
-    <a href="#" class="poem-row reveal" style="transition-delay:0.2s">
-      <span class="poem-num">005</span>
-      <span class="poem-name">The Door That <em>Was Never Locked</em></span>
-      <span class="poem-arrow">→</span>
-    </a>
+  <div class="blog-list">
+    <div class="empty-state">
+      <div class="empty-state-icon">✦</div>
+      <p class="empty-state-title">The first post is being written</p>
+      <p class="empty-state-text">Essays, reflections and thoughts are coming soon. Follow on Instagram for updates.</p>
+    </div>
   </div>
-</section>
+</div>
 
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="reveal">
-    <h2 class="contact-heading">Let's<br><em>connect.</em></h2>
-    <p class="contact-sub">
-      For collaborations, feedback, or just to say a piece found you at the right time — reach out. Words are always welcome here.
-    </p>
+<!-- ABOUT PAGE -->
+<div id="page-about" class="page">
+  <div class="about-hero">
+    <div class="about-portrait-wrap">
+      <img src="684977220_18086908262606579_815270010783047254_n.jpg" alt="Bakhtawar" class="about-portrait" onerror="this.style.display='none'">
+      <p class="about-portrait-name">Bakhtawar</p>
+      <span class="about-portrait-urdu">بختاور</span>
+      <span class="about-portrait-tag">Writer · Poet · Artist</span>
+      <div class="about-tags" style="justify-content:center;margin-top:16px;">
+        <span class="about-tag">Fiction</span>
+        <span class="about-tag">Poetry</span>
+        <span class="about-tag">Art</span>
+        <span class="about-tag">Calligraphy</span>
+        <span class="about-tag">Karachi</span>
+      </div>
+    </div>
+    <div class="about-content">
+      <h1>About Me</h1>
+      <span class="about-sub">Bakhtawar بختاور · Writer · Poet · Artist</span>
+      <p>My name is Bakhtawar بختاور, a writer and artist based in Karachi, Pakistan and I have always been someone who feels the world a little deeper than most.</p>
+      <p>I write fiction. The kind that doesn't flinch from grief, doesn't rush past loss, and doesn't let love be anything less than everything it is. My stories live in fantasy worlds built from real heartbreak, places where <em>magic exists not to escape pain, but to help you sit with it, understand it, and slowly, quietly, survive it.</em></p>
+      <p>But writing is only one language I speak.</p>
+      <p>I write poems for the feelings that don't fit into sentences. I write blogs and articles for the thoughts that need room to breathe. And when even words fall short, I pick up a pencil, a brush, a pen — and I sketch, paint, and shape calligraphy until something honest appears on the page.</p>
+      <p>Art and craft have been my companions for over <strong>8 years</strong>. Writing found me <strong>3 years ago</strong>, or maybe I finally found the courage to let it speak. Either way, I haven't stopped since.</p>
+      <p>I am also, before anything else, a reader. A devoted lover of fictional worlds and the novels that build them. I know what it feels like to finish a book and grieve its ending like a real goodbye.</p>
+      <p><em>So if you've ever cried over a story, carried a character in your chest long after the last page, felt grief you couldn't name or love you couldn't explain —</em></p>
+      <p><strong>You're in the right place. This space was made for you.</strong></p>
+    </div>
   </div>
+</div>
 
-  <div class="reveal" style="transition-delay:0.15s">
+<!-- CONTACT PAGE -->
+<div id="page-contact" class="page">
+  <div class="contact-wrap">
+    <span class="section-eye">Say Hello</span>
+    <h1 class="page-hero-title">Contact</h1>
+    <p class="page-hero-sub">Whether you want to talk about writing, collaboration, or just a line from a story that stayed with you — I am here.</p>
+    <div class="divider-line"></div>
+    <div class="contact-form-full">
+      <p class="form-title">Send a message</p>
+      <div class="form-row">
+        <input class="form-input" type="text" id="contactName" placeholder="Your name">
+        <input class="form-input" type="email" id="contactEmail" placeholder="Your email">
+      </div>
+      <input class="form-input" type="text" id="contactSubject" placeholder="Subject">
+      <textarea class="form-textarea" id="contactMessage" rows="5" placeholder="Your message..."></textarea>
+      <button class="submit-btn" onclick="submitContact()">Send message</button>
+      <div class="success-msg" id="contactSuccess">✦ Message received. I'll write back soon. ✦</div>
+    </div>
     <div class="contact-links">
-      <a href="https://instagram.com/__bakhtawark" class="contact-link">
-        <span class="contact-link-label">Instagram</span>
-        <span class="contact-link-val">@__bakhtawark</span>
+      <a href="https://instagram.com/__bakhtawark" target="_blank" class="contact-link">
+        <span class="contact-link-name">Instagram</span>
+        <span class="contact-link-handle">@__bakhtawark ↗</span>
       </a>
       <a href="#" class="contact-link">
-        <span class="contact-link-label">Wattpad</span>
-        <span class="contact-link-val">bakhtawark</span>
-      </a>
-      <a href="#" class="contact-link">
-        <span class="contact-link-label">Email</span>
-        <span class="contact-link-val">say hello</span>
+        <span class="contact-link-name">Wattpad</span>
+        <span class="contact-link-handle">Bakhtawar.K ↗</span>
       </a>
     </div>
   </div>
-</section>
+</div>
 
-<!-- FOOTER -->
 <footer>
-  <span class="footer-logo">BAKHTAWARK</span>
-  <span class="footer-copy">© 2025 · بختاور · All writing is mine.</span>
+  <span class="footer-brand">Bakhtawar <span class="footer-urdu">بختاور</span></span>
+  <span class="footer-copy">© 2025 · All words reserved</span>
+  <div class="footer-links">
+    <a href="https://instagram.com/__bakhtawark" target="_blank">Instagram</a>
+    <a href="#">Wattpad</a>
+  </div>
 </footer>
 
+</div>
+
 <script>
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + name);
+  if(navEl) navEl.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  observeFadeIns();
+}
 
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-  });
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
 
-  function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
+let currentRating = 0;
+function setRating(n) {
+  currentRating = n;
+  const labels = ['','Terrible','Poor','Okay','Good','Amazing!'];
+  document.getElementById('starLabel').textContent = labels[n];
+  document.querySelectorAll('.star-btn').forEach((b,i) => b.classList.toggle('active', i < n));
+}
 
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      ring.style.width = '50px';
-      ring.style.height = '50px';
-    });
-    el.addEventListener('mouseleave', () => {
-      ring.style.width = '32px';
-      ring.style.height = '32px';
-    });
-  });
+function submitReview() {
+  const name = document.getElementById('reviewName').value.trim();
+  const text = document.getElementById('reviewText').value.trim();
+  if(!name || !text || !currentRating) { alert('Please fill in your name, a rating, and your review.'); return; }
+  document.getElementById('reviewSuccess').style.display = 'block';
+  document.getElementById('reviewName').value = '';
+  document.getElementById('reviewWork').value = '';
+  document.getElementById('reviewText').value = '';
+  currentRating = 0;
+  document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('starLabel').textContent = 'tap to rate';
+  setTimeout(() => document.getElementById('reviewSuccess').style.display = 'none', 4000);
+}
 
-  const reveals = document.querySelectorAll('.reveal');
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  reveals.forEach(r => obs.observe(r));
+function submitContact() {
+  const name = document.getElementById('contactName').value.trim();
+  const msg = document.getElementById('contactMessage').value.trim();
+  if(!name || !msg) { alert('Please fill in your name and message.'); return; }
+  document.getElementById('contactSuccess').style.display = 'block';
+  document.getElementById('contactName').value = '';
+  document.getElementById('contactEmail').value = '';
+  document.getElementById('contactSubject').value = '';
+  document.getElementById('contactMessage').value = '';
+  setTimeout(() => document.getElementById('contactSuccess').style.display = 'none', 4000);
+}
+
+// STARS ON INFINITE FEATURE
+const starsContainer = document.getElementById('infiniteStars');
+for(let i=0;i<60;i++){
+  const star = document.createElement('div');
+  const size = Math.random()*2+0.5;
+  star.style.cssText = `position:absolute;width:${size}px;height:${size}px;background:#fff;border-radius:50%;top:${Math.random()*100}%;left:${Math.random()*100}%;opacity:${Math.random()*0.7+0.1};animation:twinkle ${Math.random()*3+2}s ease-in-out infinite;animation-delay:${Math.random()*3}s;`;
+  starsContainer.insertBefore(star, starsContainer.firstChild);
+}
+const style = document.createElement('style');
+style.textContent = '@keyframes twinkle{0%,100%{opacity:0.1;}50%{opacity:0.9;}}';
+document.head.appendChild(style);
+
+function observeFadeIns() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, {threshold:0.1});
+  document.querySelectorAll('.fade-in:not(.visible)').forEach(el => observer.observe(el));
+}
+observeFadeIns();
 </script>
 </body>
 </html>
